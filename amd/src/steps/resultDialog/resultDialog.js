@@ -32,6 +32,7 @@ import { escapeHtml, normalizeResult, ensureDataUrl, copyToClipboard, textToHtml
 import { getAudioFromResult, getImageFromResult, getVideoFromResult, getVideoTracksFromResult } from './mediaExtractors';
 import { maybeUploadDataUrlToDraft } from './mediaUpload';
 import { localizeMediaToDraft } from '../../repository';
+import { wrapHtmlWithMlang } from '../../mlang';
 import {
   insertBelowSelection,
   insertAudioHtml,
@@ -298,6 +299,9 @@ export const openResultDialog = async (editor, resultText, opts = {}) => {
   const outputText = typeof normalized.outputText === 'string'
     ? normalized.outputText
     : (normalized.outputText ? JSON.stringify(normalized.outputText) : '');
+  // Translated text goes into the editor as {mlang xx}...{mlang} when the user kept that option on.
+  const mlangCode = purpose === 'translate' ? String(opts.mlangCode || '') : '';
+  const textHtmlForEditor = () => wrapHtmlWithMlang(textToHtml(outputText), mlangCode);
   Log.debug('[tiny_haccgen_extender:result_dialog] normalized purpose=' + purpose +
     ' outputTextLen=' + (outputText ? String(outputText).length : 0));
 
@@ -657,7 +661,7 @@ export const openResultDialog = async (editor, resultText, opts = {}) => {
             if (isInteractiveHtml) {
               insertInteractiveHtml(editor, interactiveHtml);
             } else {
-              insertBelowSelection(editor, textToHtml(outputText));
+              insertBelowSelection(editor, textHtmlForEditor());
             }
             Log.debug('[tiny_haccgen_extender:result_dialog] insertBelow succeeded');
             api.close();
@@ -675,7 +679,7 @@ export const openResultDialog = async (editor, resultText, opts = {}) => {
             } else if (isVideo && outputText.trim()) {
               replaceWithVideoHtml(editor, outputText.trim(), localizedVideoTracks);
             } else {
-              editor.selection.setContent(textToHtml(outputText));
+              editor.selection.setContent(textHtmlForEditor());
             }
             Log.debug('[tiny_haccgen_extender:result_dialog] replaceSelection succeeded');
             api.close();

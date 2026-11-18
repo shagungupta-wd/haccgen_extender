@@ -28,6 +28,7 @@ import { makeRequest } from '../repository';
 import { component } from '../common';
 import { showLoadingOverlay } from '../loadingOverlay';
 import { openResultDialog } from './resultDialog/resultDialog';
+import { languageCodeFor, normaliseMlangCode } from '../mlang';
 
 /**
  * @param {Object} params
@@ -52,6 +53,9 @@ export const buildTranslateTemplateConfig = async ({
   const fieldPrompt = await getString('field_prompt', component);
   const placeholderTranslatePrompt = await getString('placeholder_translate_prompt', component);
   const errPromptRequired = await getString('err_prompt_required', component);
+  const fieldMlangTags = await getString('field_mlang_tags', component);
+  const fieldMlangCode = await getString('field_mlang_code', component);
+  const errMlangCodeInvalid = await getString('err_mlang_code_invalid', component);
   const headerRender = await Templates.renderForPromise(
     'tiny_haccgen_extender/components/dialog-head',
     {
@@ -130,6 +134,18 @@ export const buildTranslateTemplateConfig = async ({
         },
 
         {
+          type: 'checkbox',
+          name: 'mlangTags',
+          label: fieldMlangTags,
+        },
+
+        {
+          type: 'input',
+          name: 'mlangCode',
+          label: fieldMlangCode,
+        },
+
+        {
           type: 'textarea',
           name: 'prompt',
           label: fieldPrompt,
@@ -140,6 +156,8 @@ export const buildTranslateTemplateConfig = async ({
 
     initialData: {
       targetLanguage: 'English',
+      mlangTags: true,
+      mlangCode: languageCodeFor('English'),
       prompt: selectionText || '',
     },
 
@@ -147,6 +165,15 @@ export const buildTranslateTemplateConfig = async ({
       { type: 'cancel', text: btnCancel },
       { type: 'submit', text: btnRun, primary: true },
     ],
+
+    onChange: (api, details) => {
+      if (details.name === 'targetLanguage') {
+        api.setData({ mlangCode: languageCodeFor(api.getData().targetLanguage) });
+      }
+      if (details.name === 'mlangTags' && typeof api.setEnabled === 'function') {
+        api.setEnabled('mlangCode', Boolean(api.getData().mlangTags));
+      }
+    },
 
     onAction: (api, details) => {
       if (details.name === 'back') {
@@ -161,6 +188,15 @@ export const buildTranslateTemplateConfig = async ({
       if (!inputText) {
         await moodleAlert(title, errPromptRequired);
         return;
+      }
+
+      let mlangCode = '';
+      if (data.mlangTags) {
+        mlangCode = normaliseMlangCode(data.mlangCode);
+        if (!mlangCode) {
+          await moodleAlert(title, errMlangCodeInvalid);
+          return;
+        }
       }
 
       const removeLoadingOverlay = showLoadingOverlay(api, generatingMsg);
@@ -194,6 +230,7 @@ export const buildTranslateTemplateConfig = async ({
         api.close();
         await openResultDialog(editor, resp.result, {
           purpose: 'translate',
+          mlangCode,
           hasSelection: Boolean(selectionText && selectionText.trim().length),
           goBack,
         });
