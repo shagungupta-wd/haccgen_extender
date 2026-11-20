@@ -1,0 +1,1525 @@
+/* This file is part of Moodle - http://moodle.org/
+ *
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Styles for the tiny_haccgen_extender plugin.
+ *
+ * @package tiny_haccgen_extender
+ * @copyright 2026, Dynamic Pixel
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+/* Keep result preview bounded so dialog action buttons stay visible. */
+.tox .dp-ai-result-text {
+    width: 100%;
+    max-height: 56vh;
+    overflow: auto;
+}
+
+.tox .dp-ai-result-card {
+    display: flex;
+    padding: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    align-self: stretch;
+    border-radius: 12px;
+    border: 1px solid rgba(15, 108, 191, 0.12);
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(15, 108, 191, 0.06);
+}
+
+.tox .dp-ai-result-text-scroll {
+    max-height: 52vh;
+    overflow: auto;
+}
+
+.tox .dp-ai-result-body {
+    margin: 0;
+}
+
+.tox .dp-ai-result-timestamps {
+    margin-bottom: 10px;
+    font-size: 12px;
+    opacity: 0.8;
+    color: var(--dp-ai-muted, rgba(15, 31, 46, 0.7));
+}
+
+.tox .dp-ai-result-text img.mw-100,
+.tox .dp-ai-result-text video.mw-100 {
+    max-height: 40vh;
+    height: auto;
+}
+
+.tox .dp-ai-result-media {
+    width: 100%;
+    max-width: 100%;
+    max-height: 50vh;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    object-fit: contain;
+    background: #000;
+}
+
+.tox .dp-ai-result-text iframe.dp-audio-iframe {
+    width: 100%;
+    max-width: 400px;
+    border: 0;
+}
+
+.tox .dp-ai-result-raw-response-label {
+    margin-top: 8px;
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+.tox .dp-ai-result-raw-response-preview {
+    margin: 4px 0 0;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    font-size: 11px;
+    max-height: 120px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.tox .dp-ai-result-html {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.tox .dp-ai-result-text-pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 13px;
+    line-height: 1.45;
+    font-family: monospace;
+}
+
+.tox .dp-ai-result-error {
+    margin-top: 8px;
+    font-size: 12px;
+    opacity: 0.75;
+}
+
+.tox .dp-ai-result-note {
+    margin-top: 10px;
+    font-size: 12.5px;
+    opacity: 0.75;
+}
+
+/* Purpose picker (step 1) */
+.tox .dp-ai-wrap {
+    --dp-ai-primary: #222f3e;
+    --dp-ai-primary-600: #0b5aa0;
+    --dp-ai-ink: #0f1f2e;
+    --dp-ai-muted: rgba(15, 31, 46, 0.7);
+    --dp-ai-surface: #fff;
+    --dp-ai-border: rgba(15, 108, 191, 0.18);
+    --dp-ai-border-soft: rgba(15, 31, 46, 0.1);
+    --dp-ai-shadow: 0 10px 26px rgba(15, 108, 191, 0.12);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tox .dp-ai-hero {
+    border-radius: 14px;
+    padding: 16px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15, 108, 191, 0.12) 0%,
+            rgba(15, 108, 191, 0.04) 50%,
+            rgba(15, 108, 191, 0.02) 100%
+        );
+    border: 1px solid var(--dp-ai-border);
+    box-shadow: 0 4px 14px rgba(15, 108, 191, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.tox .dp-ai-title {
+    margin: 0 0 6px;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--dp-ai-ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tox .dp-ai-title-icon {
+    color: var(--dp-ai-primary);
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 8px;
+    background: rgba(15, 108, 191, 0.12);
+    border: 1px solid rgba(15, 108, 191, 0.18);
+}
+
+.tox .dp-ai-sub {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: rgba(15, 31, 46, 0.75);
+}
+
+.tox .dp-ai-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    max-height: 420px;
+    overflow: auto;
+    padding: 4px 6px 6px 2px;
+}
+
+.tox .dp-ai-grid::-webkit-scrollbar {
+    width: 10px;
+}
+
+.tox .dp-ai-grid::-webkit-scrollbar-thumb {
+    background: rgba(15, 108, 191, 0.22);
+    border-radius: 999px;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+}
+
+.tox .dp-ai-grid::-webkit-scrollbar-track {
+    background: rgba(15, 108, 191, 0.06);
+    border-radius: 999px;
+}
+
+.tox button.dp-ai-menuItem {
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid var(--dp-ai-border-soft);
+    background: var(--dp-ai-surface);
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.tox button.dp-ai-menuItem:hover {
+    transform: translateY(-2px);
+    border-color: rgba(15, 108, 191, 0.35);
+    box-shadow: 0 8px 24px rgba(15, 108, 191, 0.14);
+    background: linear-gradient(180deg, rgba(15, 108, 191, 0.07) 0%, #fff 100%);
+}
+
+.tox button.dp-ai-menuItem:active {
+    transform: translateY(0);
+}
+
+.tox button.dp-ai-menuItem:focus-visible {
+    outline: none;
+    border-color: rgba(15, 108, 191, 0.55);
+    box-shadow: 0 0 0 3px rgba(15, 108, 191, 0.22), var(--dp-ai-shadow);
+}
+
+.tox .dp-ai-icon {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    background: var(--dp-ai-primary);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.tox .dp-ai-menuItem__body {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.tox .dp-ai-menuItem__title {
+    font-size: 13.5px;
+    font-weight: 850;
+    color: var(--dp-ai-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tox .dp-ai-menuItem__desc {
+    font-size: 12.25px;
+    line-height: 1.35;
+    color: var(--dp-ai-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.tox .dp-ai-chevron {
+    margin-left: auto;
+    color: rgba(15, 108, 191, 0.55);
+    transition: transform 0.12s ease, color 0.12s ease;
+}
+
+.tox button.dp-ai-menuItem:hover .dp-ai-chevron {
+    transform: translateX(2px);
+    color: rgba(15, 108, 191, 0.85);
+}
+
+@media (max-width: 520px) {
+    .tox .dp-ai-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Shared dialog headers/fields */
+.tox .dp-ai-x-head,
+.tox .dp-ai-step2 {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f2f5ff 0%, #f9f7ff 55%, #ffffff 100%);
+    border: 1px solid #dce5fa;
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 14px rgba(59, 77, 135, 0.07);
+}
+
+.tox .dp-ai-x-head::before,
+.tox .dp-ai-step2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #8b78d6, #72a9ed, #dba0c1);
+}
+
+.tox .dp-ai-x-head__t,
+.tox .dp-ai-step2__t {
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    font-weight: 800;
+    margin: 0 0 6px;
+    color: #25324a;
+    font-size: 17px;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
+}
+
+.tox .dp-ai-x-head__s,
+.tox .dp-ai-step2__s {
+    margin: 0;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    font-size: 12.5px;
+    line-height: 1.65;
+    color: #69778d;
+}
+
+.tox .dp-ai-x-field-help-block {
+    margin: 0 0 2px;
+}
+
+.tox .dp-ai-x-field-help-block.dp-ai-x-field-hidden,
+.tox .tox-form__group.dp-ai-x-field-hidden {
+    display: none !important;
+}
+
+.tox .dp-ai-x-field-label-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0 0 4px;
+}
+
+.tox .dp-ai-x-field-label-text {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.3;
+    color: #102a43;
+}
+
+.tox .dp-ai-x-inline-help {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    line-height: 1;
+    min-width: auto;
+    min-height: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+.tox .dp-ai-x-help-glyph {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #0f6cbf;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+    font-family: Arial, sans-serif;
+    pointer-events: none;
+}
+
+.tox .dp-ai-x-help-popover {
+    display: none;
+    position: static;
+    margin: 0 0 8px;
+    max-width: 100%;
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: #102a43;
+    background: #fff;
+    border: 1px solid rgba(16, 42, 67, 0.15);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(16, 42, 67, 0.12);
+}
+
+.tox .dp-ai-x-help-popover.is-open {
+    display: block;
+}
+
+.tox .dp-ai-x-gallery-link {
+    margin: 0 0 10px;
+    font-size: 12.5px;
+}
+
+.tox .dp-ai-x-gallery-link a {
+    color: #0f6cbf;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.tox .dp-ai-x-gallery-link a:hover {
+    text-decoration: underline;
+}
+
+.tox .tox-dialog .tox-textarea,
+.tox .tox-dialog .tox-textfield {
+    border-radius: 10px;
+}
+
+.tox .tox-dialog .tox-textarea {
+    min-height: 88px;
+    max-height: 140px;
+    font-size: 12.5px;
+    line-height: 1.45;
+}
+
+/* Keep the prompt area stable when TinyMCE recalculates dialog layout on focus. */
+.tox .tox-dialog textarea.tox-textarea,
+.tox .tox-dialog .tox-textarea textarea,
+.tox .tox-dialog .tox-textarea:focus {
+    min-height: 88px !important;
+}
+
+/*
+ * Video generation (and other tall extender forms) must keep Cancel/Run in view.
+ * TinyMCE otherwise grows the whole dialog past the viewport and clips the footer.
+ */
+.tox .tox-dialog-wrap .tox-dialog,
+.tox.tox-tinymce-aux .tox-dialog {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.tox .tox-dialog__content-js {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.tox .tox-dialog__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.tox .tox-dialog__body-content {
+    overflow-y: auto !important;
+    max-height: none;
+}
+
+.tox .tox-dialog__footer {
+    flex: 0 0 auto;
+}
+
+/* Image/text recognition file picker */
+.tox .dp-ai-img-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.tox .dp-ai-drop {
+    border: 2px dashed rgba(15, 108, 191, 0.28);
+    background: rgba(15, 108, 191, 0.045);
+    border-radius: 12px;
+    padding: 22px 16px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: rgba(16, 42, 67, 0.78);
+    user-select: none;
+    cursor: pointer;
+    caret-color: transparent;
+}
+
+.tox .dp-ai-drop.is-over {
+    border-color: rgba(15, 108, 191, 0.6);
+    background: rgba(15, 108, 191, 0.085);
+}
+
+.tox .dp-ai-drop.dp-ai-drop--filled {
+    background: #fff;
+    border-color: rgba(16, 42, 67, 0.18);
+    color: #102a43;
+}
+
+.tox .dp-ai-drop-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.tox .dp-ai-drop-preview__name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #102a43;
+    text-align: center;
+}
+
+.tox .dp-ai-drop-preview__image-wrap {
+    max-width: 80%;
+    max-height: 180px;
+    display: flex;
+    justify-content: center;
+}
+
+.tox .dp-ai-drop-preview__image-wrap img {
+    max-width: 100%;
+    max-height: 180px;
+    object-fit: contain;
+}
+
+.tox .dp-ai-drop__hint {
+    font-size: 13px;
+    margin: 0;
+    font-weight: 650;
+    color: rgba(16, 42, 67, 0.85);
+}
+
+.tox .dp-ai-drop__sub {
+    font-size: 12px;
+    margin: 6px 0 0;
+    color: rgba(16, 42, 67, 0.65);
+}
+
+.tox .dp-ai-choose,
+.tox .dp-ai-btn {
+    appearance: none;
+    border: 1px solid rgba(16, 42, 67, 0.14);
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 12.5px;
+}
+
+.tox .dp-ai-choose {
+    margin-top: 12px;
+    padding: 8px 12px;
+}
+
+.tox .dp-ai-btn {
+    padding: 7px 10px;
+}
+
+.tox .dp-ai-choose:hover,
+.tox .dp-ai-btn:hover {
+    border-color: rgba(15, 108, 191, 0.35);
+}
+
+.tox .dp-ai-file-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 10px;
+    border: 1px solid rgba(16, 42, 67, 0.1);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.tox .dp-ai-file-name {
+    font-size: 12.5px;
+    color: #102a43;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 420px;
+}
+
+.tox .dp-ai-file-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.tox .dp-ai-file-input {
+    display: none;
+}
+
+.tox .dp-ai-toolbar-note {
+    margin-left: 10px;
+    font-size: 12.5px;
+    color: #5a6b7b;
+}
+
+.tox .dp-ai-hidden {
+    display: none;
+}
+
+/* Inserted editor content media */
+.dp-ai-inserted-audio {
+    width: 100%;
+    max-width: 100%;
+}
+
+.dp-ai-inserted-image,
+.dp-ai-inserted-video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.dp-ai-inserted-video {
+    background: #000;
+}
+
+.dp-ai-loading-overlay-container {
+    position: relative;
+}
+
+.dp-ai-loading-overlay-base {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.dp-ai-loading-overlay {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    display: flex !important;
+    background: rgba(255, 255, 255, 0.92);
+    z-index: 100050;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.dp-ai-loading-overlay-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.dp-ai-global-loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.88);
+    z-index: 200000;
+}
+
+.dp-ai-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(15, 108, 191, 0.2);
+    border-top-color: #0f6cbf;
+    border-radius: 50%;
+    animation: dp-ai-spin 0.8s linear infinite;
+}
+
+.dp-ai-loading-overlay-message {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #102a43;
+    text-align: center;
+    max-width: 28rem;
+    padding: 0 1rem;
+}
+
+.dp-ai-loading-overlay-detail {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #486581;
+    text-align: center;
+    max-width: 28rem;
+    padding: 0 1rem;
+    white-space: pre-line;
+}
+
+@keyframes dp-ai-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Interactive layout picker */
+.tox .dp-ai-layout-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 4px 0 10px;
+}
+
+.tox .dp-ai-layout-label {
+    margin: 0;
+    font-size: 12.5px;
+    font-weight: 750;
+    color: #102a43;
+}
+
+.tox .dp-ai-layout-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    max-height: 280px;
+    overflow: auto;
+}
+
+
+/* Interactive layout picker cards */
+.tox button.dp-ai-layout-card {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid #e4dafa;
+    border-radius: 14px;
+    background: #f7f4fbd9;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(92, 72, 140, 0.07);
+    transition: transform 0.15s ease,
+                box-shadow 0.15s ease,
+                border-color 0.15s ease,
+                background 0.15s ease;
+}
+
+/* Hover */
+.tox button.dp-ai-layout-card:hover {
+    background: #f0e8ff;
+    border-color: #c9b4f0;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(92, 72, 140, 0.12);
+}
+
+/* Selected card */
+.tox button.dp-ai-layout-card.is-selected {
+    background: #eaf4ff;
+    border: 1px solid #9bcaf3;
+    box-shadow: 0 0 0 3px rgba(155, 202, 243, 0.25);
+}
+
+/* Keyboard focus */
+.tox button.dp-ai-layout-card:focus-visible {
+    outline: 2px solid #8bbdf0;
+    outline-offset: 2px;
+}
+
+/* Layout preview icons */
+.tox .dp-ai-layout-card__sketch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9b83d8;
+}
+
+.tox .dp-ai-layout-card__sketch svg {
+    fill: #f5e7e7;
+    stroke: #9b83d8;
+}
+
+/* Card title */
+.tox .dp-ai-layout-card__title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #30334a;
+}
+.tox .dp-ai-layout-card__sketch svg {
+    fill: #f5e7e7;
+    stroke: #9b83d8;
+}
+/* Card description */
+.tox .dp-ai-layout-card__hint {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #73778b;
+}
+
+
+.tox .dp-ai-interactive-hint {
+    margin: 0 0 8px;
+    font-size: 12.5px;
+    color: rgba(16, 42, 67, 0.75);
+}
+
+.tox .dp-ai-interactive-iframe,
+.tox iframe.dp-ai-interactive-iframe {
+    width: 100%;
+    min-height: 280px;
+    height: 360px;
+    border: 1px solid rgba(15, 108, 191, 0.14);
+    border-radius: 10px;
+    background: #fff;
+}
+
+/* Interactive HTML section editor */
+.tox .dp-ai-ie {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tox .dp-ai-ie-hint {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: rgba(16, 42, 67, 0.75);
+}
+
+.tox .dp-ai-ie-split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+    min-height: 420px;
+}
+
+.tox .dp-ai-ie-col {
+    min-width: 0;
+}
+
+.tox .dp-ai-ie-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 380px;
+    overflow: auto;
+    padding-right: 4px;
+}
+
+.tox .dp-ai-ie-list-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tox .dp-ai-ie-section {
+    border: 1px solid rgba(15, 108, 191, 0.16);
+    border-radius: 12px;
+    padding: 10px;
+    background: #fff;
+}
+
+.tox .dp-ai-ie-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.tox .dp-ai-ie-section-index {
+    font-size: 12px;
+    font-weight: 800;
+    color: #0f6cbf;
+}
+
+.tox .dp-ai-ie-section-move {
+    display: flex;
+    gap: 6px;
+}
+
+.tox .dp-ai-ie-field-label {
+    display: block;
+    margin: 0 0 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #102a43;
+}
+
+.tox .dp-ai-ie-title,
+.tox .dp-ai-ie-raw {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid rgba(16, 42, 67, 0.14);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
+}
+
+.tox .dp-ai-ie-raw {
+    min-height: 220px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.tox .dp-ai-ie-body {
+    min-height: 88px;
+    max-height: 160px;
+    overflow: auto;
+    border: 1px solid rgba(16, 42, 67, 0.14);
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #fff;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.tox .dp-ai-ie-body:focus {
+    outline: none;
+    border-color: rgba(15, 108, 191, 0.55);
+    box-shadow: 0 0 0 3px rgba(15, 108, 191, 0.16);
+}
+
+.tox .dp-ai-ie-body:empty::before {
+    content: "Type the section content…";
+    color: rgba(16, 42, 67, 0.4);
+}
+
+.tox .dp-ai-ie-btn {
+    appearance: none;
+    border: 1px solid rgba(16, 42, 67, 0.14);
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12.5px;
+    cursor: pointer;
+}
+
+.tox .dp-ai-ie-btn:hover {
+    border-color: rgba(15, 108, 191, 0.35);
+}
+
+.tox .dp-ai-ie-btn--icon {
+    min-width: 28px;
+    padding: 6px 8px;
+}
+
+.tox .dp-ai-ie-btn--danger {
+    color: #9b1c1c;
+}
+
+.tox .dp-ai-ie-raw-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: rgba(16, 42, 67, 0.8);
+}
+
+.tox .dp-ai-ie-preview-label {
+    margin: 0 0 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #102a43;
+}
+
+.tox .dp-ai-ie-preview {
+    height: 380px;
+    min-height: 380px;
+}
+
+@media (max-width: 720px) {
+    .tox .dp-ai-ie-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .tox .dp-ai-layout-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .tox .dp-ai-layout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Saved / viewed interactive HTML (outside Tiny dialogs) */
+.dp-ai-interactive {
+    margin: 0.75rem 0;
+    max-width: 100%;
+}
+
+.dp-ai-interactive details {
+    margin: 0 0 8px;
+    border: 1px solid rgba(16, 42, 67, 0.14);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.dp-ai-interactive summary {
+    cursor: pointer;
+    padding: 10px 12px;
+    font-weight: 700;
+}
+
+.dp-ai-interactive details[open] summary {
+    border-bottom: 1px solid rgba(16, 42, 67, 0.1);
+}
+
+.dp-ai-interactive details > *:not(summary) {
+    padding: 10px 12px;
+}
+
+.dp-ai-interactive--tabs input[type=radio] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    clip: rect(0, 0, 0, 0);
+}
+
+.dp-ai-interactive--tabs input[type=radio] + label {
+    display: inline-block;
+    margin: 0 6px 8px 0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(16, 42, 67, 0.14);
+    cursor: pointer;
+}
+
+.dp-ai-interactive--tabs input[type=radio]:checked + label {
+    font-weight: 700;
+    border-color: rgba(15, 108, 191, 0.65);
+    background: rgba(15, 108, 191, 0.08);
+}
+
+.dp-ai-interactive--tabs input[type=radio] + label + * {
+    display: none;
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    border: 1px solid rgba(16, 42, 67, 0.12);
+    border-radius: 10px;
+}
+
+.dp-ai-interactive--tabs input[type=radio]:checked + label + * {
+    display: block;
+}
+
+.dp-ai-interactive--timeline {
+    border-left: 3px solid rgba(15, 108, 191, 0.35);
+    padding-left: 16px;
+}
+
+.dp-ai-interactive--comparison,
+.dp-ai-interactive--cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.dp-ai-interactive--comparison > *,
+.dp-ai-interactive--cards > * {
+    border: 1px solid rgba(16, 42, 67, 0.14);
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.dp-ai-interactive--callouts > * {
+    margin: 0 0 10px;
+    padding: 12px;
+    border-radius: 10px;
+    border-left: 4px solid rgba(15, 108, 191, 0.65);
+    background: rgba(15, 108, 191, 0.06);
+}
+
+.dp-ai-interactive--checklist label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0 0 8px;
+}
+
+/* =========================================================
+   HACC Gen Tools — Modern LMS Purpose Gallery
+   Scoped to the purpose gallery only.
+   ========================================================= */
+
+.tox .dp-ai-wrap {
+    --dp-ai-ink: #202b40;
+    --dp-ai-muted: #68758a;
+    font-family: "Trebuchet MS", Arial, sans-serif;
+    gap: 22px;
+}
+
+/* Hero header */
+.tox .dp-ai-wrap .dp-ai-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 22px;
+    border: 1px solid #d9e5fa;
+    border-radius: 17px;
+    background:
+        radial-gradient(
+            circle at 95% 0%,
+            rgba(191, 205, 255, 0.28),
+            transparent 42%
+        ),
+        linear-gradient(135deg, #f5f8ff 0%, #ffffff 100%);
+    box-shadow: 0 5px 18px rgba(49, 74, 126, 0.07);
+}
+
+.tox .dp-ai-wrap .dp-ai-title {
+    gap: 12px;
+    margin: 0 0 7px;
+    color: #202b40;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.35px;
+    line-height: 1.4;
+}
+
+.tox .dp-ai-wrap .dp-ai-title-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    padding: 3px;
+    border: 1px solid #e6ebf4;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 3px 9px rgba(36, 52, 87, 0.07);
+}
+
+.tox .dp-ai-wrap .dp-ai-logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+.tox .dp-ai-wrap .dp-ai-sub {
+    margin: 0;
+    padding-left: 54px;
+    color: #66748a;
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+/* Category spacing and pastel palettes */
+.tox .dp-ai-wrap .dp-ai-category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.tox .dp-ai-wrap .dp-ai-category {
+    --gallery-accent: #8976dc;
+    --gallery-tint: #f5f2ff;
+    --gallery-border: #e3dcfb;
+    min-width: 0;
+}
+
+.tox .dp-ai-wrap .dp-ai-category--text {
+    --gallery-accent: #8976dc;
+    --gallery-tint: #f5f2ff;
+    --gallery-border: #e3dcfb;
+}
+
+.tox .dp-ai-wrap .dp-ai-category--image {
+    --gallery-accent: #459bd1;
+    --gallery-tint: #eff8ff;
+    --gallery-border: #d4eaf9;
+}
+
+.tox .dp-ai-wrap .dp-ai-category--video {
+    --gallery-accent: #d77ca5;
+    --gallery-tint: #fff2f7;
+    --gallery-border: #f3d8e5;
+}
+
+.tox .dp-ai-wrap .dp-ai-category--audio {
+    --gallery-accent: #43a58a;
+    --gallery-tint: #effaf5;
+    --gallery-border: #d3eee2;
+}
+
+/* Category headings */
+.tox .dp-ai-wrap .dp-ai-category__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 13px;
+}
+
+.tox .dp-ai-wrap .dp-ai-category__marker {
+    flex: 0 0 5px;
+    width: 5px;
+    min-height: 39px;
+    align-self: center;
+    border-radius: 20px;
+    background: var(--gallery-accent);
+    box-shadow: 0 2px 7px rgba(49, 74, 126, 0.08);
+}
+
+.tox .dp-ai-wrap .dp-ai-category__header h3 {
+    margin: 0 0 4px;
+    color: #263248;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: -0.2px;
+}
+
+.tox .dp-ai-wrap .dp-ai-category__header p {
+    margin: 0;
+    color: #778297;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Purpose card grid */
+.tox .dp-ai-wrap .dp-ai-category .dp-ai-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 13px;
+    max-height: none;
+    overflow: visible;
+    padding: 2px;
+}
+
+/* Individual purpose cards */
+.tox .dp-ai-wrap .dp-ai-category button.dp-ai-menuItem {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    min-height: 104px;
+    box-sizing: border-box;
+    padding: 16px 14px;
+    border: 1px solid #e7eaf2;
+    border-radius: 15px;
+    background: #ffffff;
+    box-shadow: 0 3px 10px rgba(35, 48, 78, 0.045);
+    text-align: left;
+    white-space: normal;
+    cursor: pointer;
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease,
+        background 180ms ease;
+}
+
+.tox .dp-ai-wrap .dp-ai-category .dp-ai-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 43px;
+    width: 43px;
+    height: 43px;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid var(--gallery-border);
+    border-radius: 13px;
+    background: var(--gallery-tint);
+    color: var(--gallery-accent);
+}
+
+.tox .dp-ai-wrap .dp-ai-category .dp-ai-icon svg {
+    display: block;
+    width: 22px;
+    height: 22px;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.tox .dp-ai-wrap .dp-ai-category .dp-ai-menuItem__body {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 6px;
+    width: auto;
+    min-width: 0;
+    padding-top: 2px;
+}
+
+.tox .dp-ai-wrap .dp-ai-category .dp-ai-menuItem__title {
+    color: #293449;
+    font-size: 13px;
+    font-weight: 750;
+    line-height: 1.45;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.tox .dp-ai-wrap .dp-ai-category .dp-ai-menuItem__desc {
+    display: -webkit-box;
+    overflow: hidden;
+    color: #758095;
+    font-size: 11.5px;
+    line-height: 1.55;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* Hover and keyboard focus */
+.tox .dp-ai-wrap .dp-ai-category button.dp-ai-menuItem:hover {
+    transform: translateY(-3px);
+    border-color: var(--gallery-border);
+    background: linear-gradient(
+        145deg,
+        var(--gallery-tint) 0%,
+        #ffffff 85%
+    );
+    box-shadow: 0 9px 22px rgba(35, 48, 78, 0.09);
+}
+
+.tox .dp-ai-wrap .dp-ai-category button.dp-ai-menuItem:active {
+    transform: translateY(-1px);
+}
+
+.tox .dp-ai-wrap .dp-ai-category button.dp-ai-menuItem:focus-visible {
+    outline: 3px solid var(--gallery-accent);
+    outline-offset: 3px;
+}
+
+.tox .dp-ai-wrap .dp-ai-category .dp-ai-chevron {
+    display: none;
+}
+
+/* Responsive layout */
+@media (max-width: 760px) {
+    .tox .dp-ai-wrap .dp-ai-category .dp-ai-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .tox .dp-ai-wrap .dp-ai-category button.dp-ai-menuItem {
+        min-height: 100px;
+        padding: 13px 11px;
+        gap: 10px;
+    }
+
+    .tox .dp-ai-wrap .dp-ai-category .dp-ai-icon {
+        flex-basis: 37px;
+        width: 37px;
+        height: 37px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .tox .dp-ai-wrap .dp-ai-hero {
+        padding: 16px;
+    }
+
+    .tox .dp-ai-wrap .dp-ai-title {
+        font-size: 17px;
+    }
+
+    .tox .dp-ai-wrap .dp-ai-sub {
+        padding-left: 0;
+    }
+
+    .tox .dp-ai-wrap .dp-ai-category .dp-ai-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tox .dp-ai-x-head,
+    .tox .dp-ai-step2 {
+        padding: 15px 14px;
+        border-radius: 11px;
+    }
+
+    .tox .dp-ai-x-head__t,
+    .tox .dp-ai-step2__t {
+        font-size: 15px;
+    }
+
+    .tox .dp-ai-x-head__s,
+    .tox .dp-ai-step2__s {
+        font-size: 12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tox .dp-ai-wrap .dp-ai-category button.dp-ai-menuItem {
+        transition: none;
+    }
+}
+
+
+/* Interactive element dialog background */
+.tox .tox-dialog__body-content {
+    background: #ffffff !important;
+}
+
+/* Interactive layout cards — match Purpose Gallery */
+.tox button.dp-ai-layout-card {
+    background: #ffffff !important;
+    border: 1px solid #e7eaf2 !important;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(35, 48, 78, 0.045);
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        border-color 180ms ease,
+        background 180ms ease;
+}
+
+/* Hover effect */
+.tox button.dp-ai-layout-card:hover {
+    background: #ffffff !important;
+    border-color: #d9ddec !important;
+    transform: translateY(-2px);
+    box-shadow: 0 9px 22px rgba(35, 48, 78, 0.09);
+}
+
+/* Selected card */
+.tox button.dp-ai-layout-card.is-selected {
+    background: #ffffff !important;
+    border: 1px solid #c9b9ed !important;
+    box-shadow: 0 0 0 3px rgba(201, 185, 237, 0.22);
+}
+
+/* Selected card hover */
+.tox button.dp-ai-layout-card.is-selected:hover {
+    background: #ffffff !important;
+    border-color: #b6a0e6 !important;
+}
+
+/* Layout card preview icons */
+.tox .dp-ai-layout-card__sketch {
+    color: #8976dc;
+}
+
+.tox .dp-ai-layout-card__sketch svg {
+    background: transparent !important;
+    fill: none !important;
+    stroke: currentColor !important;
+}
+
+/* Card titles and descriptions */
+.tox .dp-ai-layout-card__title {
+    color: #293449;
+}
+
+.tox .dp-ai-layout-card__hint {
+    color: #758095;
+}
+
+/* Interactive element editor cards */
+.tox .dp-ai-ie-section {
+    background: #ffffff !important;
+    border: 1px solid #e7eaf2 !important;
+    border-radius: 15px;
+    box-shadow: 0 3px 10px rgba(35, 48, 78, 0.045);
+}
+
+/* Interactive element fields */
+.tox .dp-ai-ie-title,
+.tox .dp-ai-ie-raw,
+.tox .dp-ai-ie-body {
+    background: #ffffff !important;
+    border-color: #e1e5ed;
+}
+
+/* Interactive layout card hover */
+.tox button.dp-ai-layout-card:hover {
+    background: #f5f2ff !important;
+    border-color: #e3dcfb !important;
+    transform: translateY(-3px);
+    box-shadow: 0 9px 22px rgba(35, 48, 78, 0.09);
+}
+
+/* Selected card hover */
+.tox button.dp-ai-layout-card.is-selected:hover {
+    background: #f5f2ff !important;
+    border-color: #c9b9ed !important;
+    box-shadow: 0 0 0 3px rgba(201, 185, 237, 0.22);
+}
+
+/* Interactive editor section hover */
+.tox .dp-ai-ie-section:hover {
+    border-color: #e3dcfb !important;
+    box-shadow: 0 5px 14px rgba(35, 48, 78, 0.07);
+}
+
+.tox .tox-dialog__body-content svg {
+    fill: transparent !important;
+}

@@ -1,0 +1,96 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle. If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template tiny_haccgen_extender/components/purpose-gallery
+
+    Category-wise purpose selection gallery for step 1 modal.
+
+    Context variables required:
+    * toolslabel
+    * selectpurposehelp
+    * haccgenlogo
+    * categories[] with class, label, description, cards[]
+    * cards[] with key, label, description, iconsvg
+
+    @copyright 2026, Dynamic Pixel
+    @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+}}
+
+<div class="dp-ai-wrap">
+
+    {{! Header }}
+    <div class="dp-ai-hero">
+        <div class="dp-ai-title">
+            <span class="dp-ai-title-icon">
+                <img
+                    src="{{{haccgenlogo}}}"
+                    alt="HACC Gen"
+                    class="dp-ai-logo">
+            </span>
+            {{toolslabel}}
+        </div>
+
+        <p class="dp-ai-sub">{{selectpurposehelp}}</p>
+    </div>
+
+    {{! Category sections }}
+    <div class="dp-ai-category-list">
+
+        {{#categories}}
+        <section class="dp-ai-category dp-ai-category--{{class}}">
+
+            <div class="dp-ai-category__header">
+                <span class="dp-ai-category__marker" aria-hidden="true"></span>
+
+                <div class="dp-ai-category__heading">
+                    <h3>{{label}}</h3>
+                    <p>{{description}}</p>
+                </div>
+            </div>
+
+            <div class="dp-ai-grid" role="list">
+
+                {{#cards}}
+                <button
+                    type="button"
+                    class="dp-ai-menuItem"
+                    data-purpose="{{key}}"
+                    aria-label="{{label}}: {{description}}">
+
+                    <span class="dp-ai-icon" aria-hidden="true">
+                        {{{iconsvg}}}
+                    </span>
+
+                    <span class="dp-ai-menuItem__body">
+                        <span class="dp-ai-menuItem__title">
+                            {{label}}
+                        </span>
+
+                        <span class="dp-ai-menuItem__desc">
+                            {{description}}
+                        </span>
+                    </span>
+
+                </button>
+                {{/cards}}
+
+            </div>
+        </section>
+        {{/categories}}
+
+    </div>
+</div>

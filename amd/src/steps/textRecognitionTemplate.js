@@ -1,0 +1,436 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Text-recognition dialog config.
+ *
+ * @module tiny_haccgen_extender/steps/textRecognitionTemplate
+ * @copyright 2026, Dynamic Pixel
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+import { get_string as getString } from 'core/str';
+import { alert as moodleAlert } from 'core/notification';
+import Log from 'core/log';
+import Templates from 'core/templates';
+import { makeRequest } from '../repository';
+import { component } from '../common';
+import { showLoadingOverlay } from '../loadingOverlay';
+import { openResultDialog } from './resultDialog/resultDialog';
+import { FileDropzoneController } from './fileDropzoneController';
+
+const pushUiDebugEvent = (event, payload = {}) => {
+  const entry = {
+    ts: new Date().toISOString(),
+    scope: 'text_recognition',
+    event,
+    payload,
+  };
+  try {
+    window.__haccgenExtenderDebugEvents = Array.isArray(window.__haccgenExtenderDebugEvents)
+      ? window.__haccgenExtenderDebugEvents
+      : [];
+    window.__haccgenExtenderDebugEvents.push(entry);
+    if (window.__haccgenExtenderDebugEvents.length > 300) {
+      window.__haccgenExtenderDebugEvents.splice(0, window.__haccgenExtenderDebugEvents.length - 300);
+    }
+  } catch (e) {
+    // Never break UX for debug.
+  }
+};
+
+const readFileAsDataUrl = (file, readFileErrorMessage) =>
+  new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result || ''));
+    r.onerror = () => reject(new Error(readFileErrorMessage));
+    r.readAsDataURL(file);
+  });
+
+const dataUrlToBase64 = (dataUrl) => {
+  const idx = dataUrl.indexOf(',');
+  if (idx === -1) {
+    return '';
+  }
+  return dataUrl.slice(idx + 1);
+};
+
+/**
+ * Build modal config for text recognition (OCR).
+ *
+ * @param {Object} root0
+ * @param {Object} root0.editor TinyMCE editor instance.
+ * @param {string} root0.selectionText Selected text (for Replace selection in result dialog).
+ * @param {Function} root0.goBack Back handler.
+ * @returns {Promise<Object>} TinyMCE windowManager config.
+ */
+export const buildTextRecognitionTemplateConfig = async ({ editor, selectionText, goBack }) => {
+  const title = await getString('modal_title', component);
+  const btnRun = await getString('btn_run', component);
+  const btnCancel = await getString('btn_cancel', component);
+  const generatingMsg = await getString('generating', component);
+  const btnBack = await getString('btn_back', component);
+  const textRecognitionTitle = await getString('purpose_text_recognition_label', component);
+  const textRecognitionDropAria = await getString('text_recognition_drop_aria', component);
+  const textRecognitionDropHint = await getString('text_recognition_drop_hint', component);
+  const textRecognitionDropSub = await getString('text_recognition_drop_sub', component);
+  const textRecognitionBtnChange = await getString('btn_change', component);
+  const textRecognitionBtnClear = await getString('btn_clear', component);
+  const placeholderTextRecognitionPrompt = await getString('placeholder_text_recognition_prompt', component);
+  const textRecognitionDefaultPrompt = await getString('text_recognition_default_prompt', component);
+  const errInvalidImageFile = await getString('err_invalid_image_file', component);
+  const errDropImageFile = await getString('err_drop_image_file', component);
+  const errUploadImageFirst = await getString('err_upload_image_first', component);
+  const errPromptRequiredOrKeep = await getString('err_prompt_required_or_keep', component);
+  const errFailedReadImageData = await getString('err_failed_read_image_data', component);
+  const errFailedReadFile = await getString('err_failed_read_file', component);
+  const fileDropRender = await Templates.renderForPromise(
+    'tiny_haccgen_extender/components/file-dropzone',
+    {
+      droparia: textRecognitionDropAria,
+      drophint: textRecognitionDropHint,
+      dropsub: textRecognitionDropSub,
+      choosefile: textRecognitionBtnChange,
+      changefile: textRecognitionBtnChange,
+      clearfile: textRecognitionBtnClear,
+      showchoosebutton: true,
+    }
+  );
+  const toolbarNoteRender = await Templates.renderForPromise(
+    'tiny_haccgen_extender/components/toolbar-note',
+    {}
+  );
+  [fileDropRender, toolbarNoteRender].forEach((item) => {
+    if (item.js) {
+      Templates.runTemplateJS(item.js);
+    }
+  });
+
+  // Keep file in closure. (Not in dialog data; TinyMCE data is JSON.)
+  let selectedFile = null;
+
+  const logFile = (label, f) => {
+    if (!f) {
+      Log.debug(`[tiny_haccgen_extender:text_recognition] ${label}: <null>`);
+      pushUiDebugEvent('file_state', { label, hasFile: false });
+      return;
+    }
+    Log.debug('[tiny_haccgen_extender:text_recognition] ' + label + ' name=' + (f.name || '') + ' type=' + (f.type || ''));
+    pushUiDebugEvent('file_state', {
+      label,
+      hasFile: true,
+      name: String(f.name || ''),
+      type: String(f.type || ''),
+      size: Number(f.size || 0),
+    });
+  };
+
+  const bindDropzone = (api = null, source = 'unknown') => {
+    pushUiDebugEvent('dialog_open', { source });
+
+    const getTopDialogEl = () => {
+      try {
+        const dialogs = document.querySelectorAll('.tox-dialog');
+        return dialogs && dialogs.length ? dialogs[dialogs.length - 1] : null;
+      } catch (e) {
+        return null;
+      }
+    };
+
+    const resolveRoot = () => {
+      const findWrap = (container) => {
+        if (!container || typeof container.querySelector !== 'function') {
+          return null;
+        }
+        return container.querySelector('[data-role="ai-dropzone-wrap"]')
+          || container.querySelector('#dp-ai-img-wrap');
+      };
+
+      const apiRoot = api && api.getEl ? api.getEl() : null;
+      const apiWrap = findWrap(apiRoot);
+      if (apiWrap) {
+        return apiWrap;
+      }
+
+      const apiDialog = apiRoot && typeof apiRoot.closest === 'function'
+        ? apiRoot.closest('.tox-dialog')
+        : null;
+      const apiDialogWrap = findWrap(apiDialog);
+      if (apiDialogWrap) {
+        return apiDialogWrap;
+      }
+
+      const topDialog = getTopDialogEl();
+      const topWrap = findWrap(topDialog);
+      if (topWrap) {
+        return topWrap;
+      }
+
+      return null;
+    };
+
+    let attempts = 0;
+    const maxAttempts = 40;
+    const bindWithRetry = () => {
+      attempts += 1;
+      const root = resolveRoot();
+      if (root) {
+        const controller = new FileDropzoneController({
+          root,
+          title,
+          errInvalidImageFile,
+          errDropImageFile,
+          errUploadImageFirst,
+          logPrefix: 'text_recognition',
+          onFileChanged: (file) => {
+            selectedFile = file || null;
+            logFile('controller file changed', selectedFile);
+          },
+        });
+        if (controller.bind()) {
+          Log.debug('[tiny_haccgen_extender:text_recognition] dropzone controller attached attempts=' + attempts);
+          pushUiDebugEvent('dropzone_bound', { attempts, source });
+          return;
+        }
+      }
+
+      if (attempts < maxAttempts) {
+        window.setTimeout(bindWithRetry, 100);
+        return;
+      }
+      Log.error('[tiny_haccgen_extender:text_recognition] missing required elements after retries; aborting bindings');
+    };
+
+    bindWithRetry();
+  };
+
+  return {
+    title: `${title}: ${textRecognitionTitle}`,
+    size: 'medium',
+
+    body: {
+      type: 'panel',
+      items: [
+        {
+          type: 'htmlpanel',
+          name: 'imgDrop',
+          html: fileDropRender.html,
+        },
+
+        {
+          type: 'bar',
+          items: [
+            { type: 'button', name: 'back', text: btnBack, buttonType: 'secondary' },
+            {
+              type: 'htmlpanel',
+              html: toolbarNoteRender.html,
+            },
+          ],
+        },
+
+        {
+          type: 'textarea',
+          name: 'prompt',
+          label: '',
+          placeholder: placeholderTextRecognitionPrompt,
+        },
+      ],
+    },
+
+    initialData: {
+      prompt: textRecognitionDefaultPrompt,
+    },
+
+    buttons: [
+      { type: 'cancel', text: btnCancel },
+      { type: 'submit', text: btnRun, primary: true },
+    ],
+
+    onAction: (api, details) => {
+      Log.debug('[tiny_haccgen_extender:text_recognition] onAction ' + (details?.name || ''));
+
+      if (details.name === 'back') {
+        goBack(api);
+      }
+    },
+
+    onOpen: (api) => {
+      Log.debug('[tiny_haccgen_extender:text_recognition] onOpen fired');
+      bindDropzone(api, 'tiny_onOpen');
+    },
+    __dpAfterOpen: () => bindDropzone(null, 'ui_after_open_fallback'),
+
+    onSubmit: async (api) => {
+      Log.debug('[tiny_haccgen_extender:text_recognition] onSubmit fired');
+
+      const data = api.getData();
+      const prompt = (data.prompt || '').trim();
+
+      Log.debug('[tiny_haccgen_extender:text_recognition] submit data promptLen=' + prompt.length + ' hasFile=' + !!selectedFile);
+      pushUiDebugEvent('submit_start', {
+        promptLen: prompt.length,
+        hasSelectedFileVar: !!selectedFile,
+      });
+      logFile('selectedFile at submit', selectedFile);
+
+      let fileToUse = selectedFile;
+
+      if (!fileToUse) {
+        Log.debug('[tiny_haccgen_extender:text_recognition] selectedFile null, trying to locate in DOM');
+
+        const isImage = (f) => !!(f && typeof f.type === 'string' && f.type.startsWith('image/'));
+
+        const getFileFromInput = (input) => {
+          const file = input && input.files && input.files[0] ? input.files[0] : null;
+          logFile('getFileFromInput candidate', file);
+          return file && isImage(file) ? file : null;
+        };
+
+        const findFileInContainer = (container, label) => {
+          if (!container || typeof container.querySelector !== 'function') {
+            Log.debug('[tiny_haccgen_extender:text_recognition] findFileInContainer no container label=' + (label || ''));
+            return null;
+          }
+          const input = container.querySelector('[data-role="ai-file"], #dp-ai-file');
+          const found = input ? getFileFromInput(input) : null;
+
+          Log.debug('[tiny_haccgen_extender:text_recognition] findFileInContainer label=' + (label || '') +
+            ' hasInput=' + !!input + ' hasFound=' + !!found);
+          logFile(`findFileInContainer found (${label})`, found);
+
+          return found;
+        };
+
+        const root = api.getEl ? api.getEl() : null;
+        Log.debug('[tiny_haccgen_extender:text_recognition] submit api.getEl() hasRoot=' + !!root);
+
+        fileToUse = (root && findFileInContainer(root, 'apiRoot')) || null;
+
+        if (!fileToUse && root) {
+          const iframe = root.querySelector && root.querySelector('iframe');
+          Log.debug('[tiny_haccgen_extender:text_recognition] checking iframe hasIframe=' + !!iframe +
+            ' hasDoc=' + !!(iframe && iframe.contentDocument));
+          if (iframe && iframe.contentDocument) {
+            fileToUse = findFileInContainer(iframe.contentDocument, 'iframeDoc');
+          }
+        }
+
+        if (!fileToUse && typeof document.querySelector === 'function') {
+          fileToUse = findFileInContainer(document, 'document');
+        }
+
+        logFile('fileToUse after DOM search', fileToUse);
+      }
+
+      if (!fileToUse) {
+        Log.error('[tiny_haccgen_extender:text_recognition] no file found; showing alert');
+        pushUiDebugEvent('submit_blocked_no_file');
+        await moodleAlert(title, errUploadImageFirst);
+        return;
+      }
+
+      if (!prompt) {
+        Log.error('[tiny_haccgen_extender:text_recognition] empty prompt; showing alert');
+        pushUiDebugEvent('submit_blocked_empty_prompt');
+        await moodleAlert(title, errPromptRequiredOrKeep);
+        return;
+      }
+
+      const removeLoadingOverlay = showLoadingOverlay(api, generatingMsg);
+
+      try {
+        Log.debug('[tiny_haccgen_extender:text_recognition] reading file as data URL');
+        const dataUrl = await readFileAsDataUrl(fileToUse, errFailedReadFile);
+        Log.debug('[tiny_haccgen_extender:text_recognition] dataUrl length len=' + (dataUrl.length || 0));
+
+        const b64 = dataUrlToBase64(dataUrl);
+        Log.debug('[tiny_haccgen_extender:text_recognition] base64 length len=' + (b64.length || 0));
+        pushUiDebugEvent('submit_payload_ready', {
+          filename: String(fileToUse.name || ''),
+          mimetype: String(fileToUse.type || ''),
+          dataUrlLen: dataUrl.length || 0,
+          b64Len: b64.length || 0,
+          promptLen: prompt.length,
+        });
+
+        if (!b64) {
+          removeLoadingOverlay();
+          if (typeof api.unblock === 'function') {
+            api.unblock();
+          }
+          Log.error('[tiny_haccgen_extender:text_recognition] failed to extract base64');
+          await moodleAlert(title, errFailedReadImageData);
+          return;
+        }
+
+        const optionsjson = JSON.stringify({
+          image: {
+            filename: fileToUse.name || 'image',
+            mimetype: fileToUse.type || 'application/octet-stream',
+            content_base64: b64,
+          },
+        });
+
+        Log.debug('[tiny_haccgen_extender:text_recognition] makeRequest payload promptLen=' + prompt.length +
+          ' filename=' + (fileToUse.name || ''));
+
+        const resp = await makeRequest('text_recognition', prompt, optionsjson);
+        pushUiDebugEvent('submit_response', {
+          code: resp?.code,
+          resultType: typeof resp?.result,
+          resultLen: typeof resp?.result === 'string' ? resp.result.length : 0,
+        });
+
+        Log.debug('[tiny_haccgen_extender:text_recognition] makeRequest response code=' + (resp?.code ?? '') +
+          ' resultType=' + typeof resp?.result);
+
+        if (resp.code !== 200) {
+          removeLoadingOverlay();
+          if (typeof api.unblock === 'function') {
+            api.unblock();
+          }
+          const msg = typeof resp.result === 'string' ? resp.result : JSON.stringify(resp.result || {});
+          Log.error('[tiny_haccgen_extender:text_recognition] non-200 response code=' + resp.code +
+            ' msg=' + (typeof msg === 'string' ? msg.slice(0, 100) : ''));
+          await moodleAlert(title, msg);
+          return;
+        }
+
+        removeLoadingOverlay();
+        if (typeof api.unblock === 'function') {
+          api.unblock();
+        }
+        api.close();
+
+        Log.debug('[tiny_haccgen_extender:text_recognition] opening result dialog');
+        pushUiDebugEvent('open_result_dialog');
+        await openResultDialog(editor, resp.result, {
+          hasSelection: Boolean(selectionText?.trim()),
+          purpose: 'text_recognition',
+        });
+      } catch (e) {
+        removeLoadingOverlay();
+        if (typeof api.unblock === 'function') {
+          api.unblock();
+        }
+        Log.error('[tiny_haccgen_extender:text_recognition] exception message=' + (e?.message || String(e)));
+        pushUiDebugEvent('submit_exception', {
+          message: e?.message || String(e),
+        });
+        await moodleAlert(title, e?.message || String(e));
+      }
+    },
+  };
+};
